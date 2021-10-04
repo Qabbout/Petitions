@@ -1,6 +1,6 @@
 # Petitions
 
-iOS app to display petitions sent to the whitehouse, use Swift, UIKit, and RESTful API
+iOS app to display petitions sent to the whitehouse, use Swift, UIKit, and online json data.
 
 ## Screenshots
 
