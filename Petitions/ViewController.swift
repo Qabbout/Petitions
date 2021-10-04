@@ -14,15 +14,32 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
 
         //will fix this code laters
-        let urlString = "https://hackingwithswift.com/samples/petitions-1.json"
+        
+        let urlString: String
+        if navigationController?.tabBarItem.tag==0 {
+            urlString = "https://hackingwithswift.com/samples/petitions-1.json"
+        }
+        else {
+            urlString = "https://hackingwithswift.com/samples/petitions-2.json?"
+        }
+        
+        
         
         if let url = URL(string: urlString){
             if let data = try? Data(contentsOf: url){
                 parse(json: data)
+                return
             }
-        }
+            
+    }
+        showError()
     }
     
+    func showError(){
+    let alertController = UIAlertController(title: "Loading Error", message:  "The was a problem loading the feed, pls check your connection and trt again", preferredStyle: .alert)
+    alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+    present(alertController, animated: true)
+    }
     func parse(json: Data){
         let decoder = JSONDecoder()
         
