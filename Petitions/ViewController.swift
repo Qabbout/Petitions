@@ -1,20 +1,21 @@
-//
-//  ViewController.swift
-//  Petitions
-//
-//  Created by Abdulrahman on 10/2/21.
-//
+    //
+    //  ViewController.swift
+    //  Petitions
+    //
+    //  Created by Abdulrahman on 10/2/21.
+    //
 
 import UIKit
 
 class ViewController: UITableViewController {
     var petitions = [Petition]()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        //will fix this code laters
-        
+        performSelector(inBackground: #selector(fetchJSON), with: nil)
+    }
+    
+    @objc func fetchJSON(){
         let urlString: String
         if navigationController?.tabBarItem.tag==0 {
             urlString = "https://hackingwithswift.com/samples/petitions-1.json"
@@ -25,28 +26,33 @@ class ViewController: UITableViewController {
         
         
         
-        if let url = URL(string: urlString){
-            if let data = try? Data(contentsOf: url){
-                parse(json: data)
-                return
+            if let url = URL(string: urlString){
+                if let data = try? Data(contentsOf: url){
+                    parse(json: data)
+                    return
+                }
             }
-            
-    }
-        showError()
+        performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false )
+        
     }
     
-    func showError(){
-    let alertController = UIAlertController(title: "Loading Error", message:  "The was a problem loading the feed, pls check your connection and trt again", preferredStyle: .alert)
-    alertController.addAction(UIAlertAction(title: "Ok", style: .default))
-    present(alertController, animated: true)
+    @objc func showError(){
+            
+            let alertController = UIAlertController(title: "Loading Error", message:  "The was a problem loading the feed, pls check your connection and trt again", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+            present(alertController, animated: true)
+      
     }
     func parse(json: Data){
         let decoder = JSONDecoder()
         
         if let jsonPetitions = try? decoder.decode(Petitions.self, from: json){
             petitions = jsonPetitions.results
-            tableView.reloadData()
+
+            tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
             
+        } else {
+            performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false)
         }
     }
     
@@ -70,7 +76,7 @@ class ViewController: UITableViewController {
         detailViewController.detailItem = petitions[indexPath.row]
         navigationController?.pushViewController(detailViewController, animated: true)
     }
-
-
+    
+    
 }
 
