@@ -12,17 +12,22 @@ class ViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        performSelector(inBackground: #selector(fetchJSON), with: nil)
+        DispatchQueue.global(qos: .background).async {
+            self.fetchJSON()
+        }
     }
     
     @objc func fetchJSON(){
-        let urlString: String
-        if navigationController?.tabBarItem.tag==0 {
-            urlString = "https://hackingwithswift.com/samples/petitions-1.json"
+        var urlString: String = "https://hackingwithswift.com/samples/petitions-1.json"
+        DispatchQueue.main.async {
+            if self.navigationController?.tabBarItem.tag==0 {
+                urlString = "https://hackingwithswift.com/samples/petitions-1.json"
+            }
+            else {
+                urlString = "https://hackingwithswift.com/samples/petitions-2.json?"
+            }
         }
-        else {
-            urlString = "https://hackingwithswift.com/samples/petitions-2.json?"
-        }
+       
         
         
         
@@ -32,8 +37,9 @@ class ViewController: UITableViewController {
                     return
                 }
             }
-        performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false )
-        
+        DispatchQueue.main.async {
+            self.showError()
+        }
     }
     
     @objc func showError(){
@@ -48,11 +54,15 @@ class ViewController: UITableViewController {
         
         if let jsonPetitions = try? decoder.decode(Petitions.self, from: json){
             petitions = jsonPetitions.results
-
-            tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+           
             
         } else {
-            performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false)
+            DispatchQueue.main.async {
+                self.showError()
+            }
         }
     }
     
