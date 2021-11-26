@@ -44,7 +44,7 @@ class ViewController: UITableViewController {
     
     @objc func showError(){
             
-            let alertController = UIAlertController(title: "Loading Error", message:  "The was a problem loading the feed, pls check your connection and trt again", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Loading Error", message:  "There was a problem loading the feed, pls check your connection and try again", preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: "Ok", style: .default))
             present(alertController, animated: true)
       
